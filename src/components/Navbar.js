@@ -36,8 +36,8 @@ const Navbar = () => {
                         {isOpenCliente && (
                             <div className="absolute right-0 w-full mt-2 origin-top-right rounded-md shadow-lg md:w-48">
                                 <div className="px-2 py-2 bg-white rounded-md shadow">
-                                    <Link to="/clientes/ver" className="block px-4 py-2 mt-2 text-sm bg-transparent rounded-lg hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">Ver clientes</Link>
-                                    <Link to="/clientes/crear" className="block px-4 py-2 mt-2 text-sm bg-transparent rounded-lg hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">Crear Cliente</Link>
+                                    <Link to="/clientes/ver" className="block px-4 py-2 mt-2 text-sm bg-transparent rounded-lg hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline" onClick={toggleDropdownCliente}>Ver clientes</Link>
+                                    <Link to="/clientes/crear" className="block px-4 py-2 mt-2 text-sm bg-transparent rounded-lg hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline" onClick={toggleDropdownCliente}>Crear Cliente</Link>
                                 </div>
                             </div>
                         )}
@@ -55,8 +55,8 @@ const Navbar = () => {
                         {isOpen && (
                             <div className="absolute right-0 w-full mt-2 origin-top-right rounded-md shadow-lg md:w-48">
                                 <div className="px-2 py-2 bg-white rounded-md shadow">
-                                    <Link to="/productos/ver" className="block px-4 py-2 mt-2 text-sm bg-transparent rounded-lg hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">Ver Productos</Link>
-                                    <Link to="/productos/crear" className="block px-4 py-2 mt-2 text-sm bg-transparent rounded-lg hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline">Crear Producto</Link>
+                                    <Link to="/productos/ver" className="block px-4 py-2 mt-2 text-sm bg-transparent rounded-lg hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline" onClick={toggleDropdown} >Ver Productos</Link>
+                                    <Link to="/productos/crear" className="block px-4 py-2 mt-2 text-sm bg-transparent rounded-lg hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline" onClick={toggleDropdown} >Crear Producto</Link>
                                 </div>
                             </div>
                         )}
