@@ -1,46 +1,81 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import useHttp from '../hooks/useHttp';
+import '../styles/App.css';
 
 const Clientes = () => {
-  // const { data: clientes, fetchData } = useHttp('http://localhost:8081/clientes');
+  const [clientes, setClientes] = useState([]);
+  const { fetchData, loading, error } = useHttp('http://localhost:53856/api/usuario/listar');
+  const { fetchData: deleteCliente } = useHttp('http://localhost:53856/api/usuario/eliminar/');
 
-  const clientes = [
-    { id: 1, nombre: 'Juan', email: 'adorqui@gmail.com', precio: 100 },
-    { id: 2, nombre: 'Pedro', email: 'ahsjhdas', precio: 100 },
-    { id: 3, nombre: 'Maria', email: 'ahsjhdas', precio: 100 },
-    { id: 4, nombre: 'Jose', email: 'ahsjhdas', precio: 100 },
-  ];
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    const fetchClientes = async () => {
+      const response = await fetchData();
+      if (response) {
+        setClientes(response);
+      }
+    };
+    fetchClientes();
+  }, []);
+  
+  const handleDelete = async (id) => {
+    console.log('id', id);
+    try {
+      const response = await deleteCliente('DELETE', { id });
+      if (response === 'Usuario eliminado') {
+        window.location.reload();
+      } else {
+        console.error('Error al eliminar el cliente:', response);
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+    }
+  };
 
   return (
     <div className="container">
       <h2 className="text-3xl font-bold text-center mb-8">Clientes</h2>
+
+      {loading && <p className="text-center">Cargando clientes...</p>}
+      {error && <p className="text-center text-red-500">Error: {error}</p>}
+
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {clientes.map(cliente => (
-          <div class="relative flex flex-col text-gray-700 bg-white shadow-md bg-clip-border rounded-xl w-96">
-            <div class="relative mx-4 mt-4 overflow-hidden text-gray-700 bg-white bg-clip-border rounded-xl h-96">
-              <img
-                src="https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=927&amp;q=80"
-                alt="card-image" class="object-cover w-full h-full" />
-            </div>
-            <div class="p-6">
-              <div class="flex items-center justify-between mb-2">
-                <p class="block font-sans text-base antialiased font-medium leading-relaxed text-blue-gray-900">
-                  {cliente.nombre}
-                </p>
-                <p class="block font-sans text-base antialiased font-medium leading-relaxed text-blue-gray-900">
-                  {cliente.precio}
-                </p>
+        {clientes && clientes.length > 0 ? (
+          clientes.map((cliente) => (
+            <div
+              key={cliente.id}
+              className="relative flex flex-col text-gray-700 bg-white shadow-md bg-clip-border rounded-xl w-96"
+            >
+              <div className="relative mx-4 mt-4 overflow-hidden text-gray-700 bg-white bg-clip-border rounded-xl h-96">
+                <img
+                  src={cliente.imagen || 'https://via.placeholder.com/300'}
+                  alt={cliente.nombre}
+                  className="object-cover w-full h-full"
+                />
               </div>
-              <p class="block font-sans text-sm antialiased font-normal leading-normal text-gray-700 opacity-75">
-                {cliente.email}
-              </p>
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="block font-sans text-base antialiased font-medium leading-relaxed text-blue-gray-900">
+                    {cliente.nombre} {cliente.apellido}
+                  </p>
+                  <p className="block font-sans text-base antialiased font-medium leading-relaxed text-blue-gray-900">
+                    {cliente.password}
+                  </p>
+                </div>
+                <p className="block font-sans text-sm antialiased font-normal leading-normal text-gray-700 opacity-75">
+                  {cliente.email}
+                </p>
+                <button
+                  onClick={() => handleDelete(cliente.id)}
+                  className="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                >
+                  Eliminar
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p className="text-center">No hay productos disponibles.</p>
+        )}
       </div>
     </div>
   );

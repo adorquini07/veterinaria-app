@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import useHttp from '../hooks/useHttp';
 
 const ClienteForm = () => {
-    const [formData, setFormData] = useState({
+    const [formData, setForm] = useState({
         nombre: '',
         apellido: '',
         email: '',
@@ -10,24 +11,49 @@ const ClienteForm = () => {
     });
 
     const [error, setError] = useState('');
+    const { fetchData, loading } = useHttp('http://localhost:53856/api/usuario');
 
     const handleChange = (e) => {
-        setFormData({
+        const { name, value } = e.target;
+        setForm({
             ...formData,
-            [e.target.name]: e.target.value,
+            [name]: value,
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
         if (formData.contrasena !== formData.repetirContrasena) {
             setError('Las contraseñas no son iguales');
-        } else {
-            setError('');
-            // Aquí puedes manejar el envío del formulario
-            console.log('Formulario enviado', formData);
+            return;
+        }
+
+        const requestData = {
+            nombre: formData.nombre,
+            apellido: formData.apellido,
+            email: formData.email,
+            password: formData.contrasena
+        };
+
+
+        try {
+            const response = await fetchData('POST', requestData, {
+                'Content-Type': 'application/json',
+            });
+            if (response.id) {
+                console.log('Usuario guardado exitosamente');
+                window.location.href = '/#/clientes/ver';
+            } else {
+                console.error('Error al guardar el usuario:', response.statusText);
+                setError('No se pudo guardar el usuario. Verifica los datos ingresados.');
+            }
+        } catch (error) {
+            console.error('Error en la solicitud:', error);
+            setError('Ocurrió un error al intentar guardar el usuario.');
         }
     };
+
 
     return (
         <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
@@ -104,11 +130,8 @@ const ClienteForm = () => {
             </div>
             {error && <p className="text-red-500 text-xs italic">{error}</p>}
             <div className="flex items-center justify-between">
-                <button
-                    type="submit"
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                    Enviar
+                <button type="submit" disabled={loading} className="px-4 py-2 bg-blue-500 text-white rounded-md btn">
+                    {loading ? 'Enviando...' : 'Enviar'}
                 </button>
             </div>
         </form>
