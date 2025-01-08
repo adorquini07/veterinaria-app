@@ -8,7 +8,8 @@ import Footer from './components/Footer';
 import Productos from './components/Productos';
 import ClienteForm from './components/ClienteForm';
 import ProductosForm from './components/ProductosForm';
-// import Search from './components/Search';
+import Servicios from './components/Servicios';
+import Nosotros from './components/Nosotros';
 import './styles/App.css';
 
 
@@ -24,6 +25,8 @@ const App = () => {
               <>
                 <Bienvenida />
                 <Testimonios />
+                <Servicios />
+                <Nosotros />
               </>
             }
           />
