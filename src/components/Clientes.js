@@ -6,6 +6,7 @@ const Clientes = () => {
   const [clientes, setClientes] = useState([]);
   const { fetchData, loading, error } = useHttp('http://localhost:53856/api/usuario/listar');
   const { fetchData: deleteCliente } = useHttp('http://localhost:53856/api/usuario/eliminar/');
+  const { fetchData: buscarClienteApi  } = useHttp('http://localhost:53856/api/usuario/buscar/nombre/');
 
   useEffect(() => {
     const fetchClientes = async () => {
@@ -31,9 +32,46 @@ const Clientes = () => {
     }
   };
 
+  const handleBuscar = async () => {
+    const nombre = document.getElementById('buscarProducto').value;
+    if (nombre) {
+      try {
+        const response = await buscarClienteApi('GET', {nombre}, `/${nombre}`);
+        if (response) {
+          setClientes(response);
+        } else {
+          setClientes([]);
+        }
+      } catch (error) {
+        console.error('Error al buscar el producto:', error);
+        setClientes([]);
+      }
+    } else {
+      const response = await fetchData();
+      if (response) {
+        setClientes(response);
+      }
+    }
+  };
+
   return (
     <div className="container">
       <h2 className="text-3xl font-bold text-center mb-8">Clientes</h2>
+
+      <div class="flex items-center max-w-md mx-auto bg-white rounded-lg " x-data="{ search: '' }">
+        <div class="w-full">
+          <input type="search" class="w-full px-4 py-1 text-gray-800 rounded-full focus:outline-none border" placeholder="search" x-model="search" id='buscarProducto' />
+        </div>
+        <div>
+          <button type="submit" class="flex items-center bg-blue-500 justify-center w-12 h-12 text-white rounded-r-lg" onClick={() => handleBuscar()}>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
 
       {loading && <p className="text-center">Cargando clientes...</p>}
       {error && <p className="text-center text-red-500">Error: {error}</p>}
