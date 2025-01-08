@@ -3,45 +3,51 @@ import useHttp from '../hooks/useHttp';
 import '../styles/App.css';
 
 const Productos = () => {
-  // const { data: productos, fetchData } = useHttp('http://localhost:8081/productos');
+  const { data: productos, fetchData, loading, error } = useHttp('http://localhost:49775/api/producto/listar');
 
-  const productos = [
-    { id: 1, nombre: 'Juan', email: 'adorqui@gmail.com', precio: 100 },
-    { id: 2, nombre: 'Pedro', email: 'ahsjhdas', precio: 100 },
-    { id: 3, nombre: 'Maria', email: 'ahsjhdas', precio: 100 },
-    { id: 4, nombre: 'Jose', email: 'ahsjhdas', precio: 100 },
-  ];
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div className="container">
       <h2 className="text-3xl font-bold text-center mb-8">Productos</h2>
+
+      {loading && <p className="text-center">Cargando productos...</p>}
+      {error && <p className="text-center text-red-500">Error: {error}</p>}
+
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {productos.map(producto => (
-          <div class="relative flex flex-col text-gray-700 bg-white shadow-md bg-clip-border rounded-xl w-96">
-            <div class="relative mx-4 mt-4 overflow-hidden text-gray-700 bg-white bg-clip-border rounded-xl h-96">
-              <img
-                src="https://images.unsplash.com/photo-1629367494173-c78a56567877?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=927&amp;q=80"
-                alt="card-image" class="object-cover w-full h-full" />
-            </div>
-            <div class="p-6">
-              <div class="flex items-center justify-between mb-2">
-                <p class="block font-sans text-base antialiased font-medium leading-relaxed text-blue-gray-900">
-                  {producto.nombre}
-                </p>
-                <p class="block font-sans text-base antialiased font-medium leading-relaxed text-blue-gray-900">
-                  {producto.precio}
+        {productos && productos.length > 0 ? (
+          productos.map((producto) => (
+            <div
+              key={producto.id}
+              className="relative flex flex-col text-gray-700 bg-white shadow-md bg-clip-border rounded-xl w-96"
+            >
+              <div className="relative mx-4 mt-4 overflow-hidden text-gray-700 bg-white bg-clip-border rounded-xl h-96">
+                <img
+                  src={producto.imagen || 'https://via.placeholder.com/300'}
+                  alt={producto.nombre}
+                  className="object-cover w-full h-full"
+                />
+              </div>
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="block font-sans text-base antialiased font-medium leading-relaxed text-blue-gray-900">
+                    {producto.nombre}
+                  </p>
+                  <p className="block font-sans text-base antialiased font-medium leading-relaxed text-blue-gray-900">
+                    ${producto.precio}
+                  </p>
+                </div>
+                <p className="block font-sans text-sm antialiased font-normal leading-normal text-gray-700 opacity-75">
+                  {producto.descripcion || 'Sin descripción'}
                 </p>
               </div>
-              <p class="block font-sans text-sm antialiased font-normal leading-normal text-gray-700 opacity-75">
-                {producto.email}
-              </p>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p className="text-center">No hay productos disponibles.</p>
+        )}
       </div>
     </div>
   );

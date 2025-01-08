@@ -1,60 +1,93 @@
 import React, { useState } from 'react';
+import useHttp from '../hooks/useHttp';
+
 const ProductosForm = () => {
     const [form, setForm] = useState({
         nombre: '',
         cantidad: '',
         precio: '',
         descripcion: '',
-        imagen: ''
+        imagen: null,
     });
 
     const [errors, setErrors] = useState({});
+    const { fetchData, loading } = useHttp('http://localhost:49775/api/producto');
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        console.log(name, value);
-        document.getElementById(name).style.display = 'none';
-        setForm({
-            ...form,
-            [name]: value
-        });
+        const { name, value, files } = e.target;
+
+        if (name === 'imagen') {
+            setForm({
+                ...form,
+                [name]: files[0],
+            });
+        } else {
+            if (document.getElementById(name)) {
+                document.getElementById(name).style.display = 'none';
+            }
+            setForm({
+                ...form,
+                [name]: value,
+            });
+        }
     };
 
     const validate = () => {
         let errors = {};
         if (!form.nombre) {
-            document.getElementById('nombre').style.display = 'block';
-            errors.nombre = 'El nombre es requerido'
-        };
+            if (document.getElementById('nombre')) {
+                document.getElementById('nombre').style.display = 'block';
+            }
+            errors.nombre = 'El nombre es requerido';
+        }
         if (!form.cantidad) {
-            document.getElementById('cantidad').style.display = 'block';
+            if (document.getElementById('cantidad')) {
+                document.getElementById('cantidad').style.display = 'block';
+            }
             errors.cantidad = 'La cantidad es requerida';
         } else if (isNaN(form.cantidad)) {
             errors.cantidad = 'La cantidad debe ser un número';
         }
         if (!form.precio) {
-            document.getElementById('precio').style.display = 'block';
+            if (document.getElementById('precio')) {
+                document.getElementById('precio').style.display = 'block';
+            }
             errors.precio = 'El precio es requerido';
         } else if (isNaN(form.precio)) {
             errors.precio = 'El precio debe ser un número';
         }
         if (!form.descripcion) {
-            document.getElementById('descripcion').style.display = 'block';
-            errors.descripcion = 'La descripción es requerida'
-        };
+            if (document.getElementById('descripcion')) {
+                document.getElementById('descripcion').style.display = 'block';
+            }
+            errors.descripcion = 'La descripción es requerida';
+        }
         if (!form.imagen) {
-            document.getElementById('imagen').style.display = 'block';
-            errors.imagen = 'La imagen es requerida'
-        };
+            if (document.getElementById('imagen')) {
+                document.getElementById('imagen').style.display = 'block';
+            }
+            errors.imagen = 'La imagen es requerida';
+        }
         return errors;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const validationErrors = validate();
         if (Object.keys(validationErrors).length === 0) {
-            console.log('Formulario enviado', form);
-            // Aquí puedes agregar la lógica para enviar el formulario
+            const formData = new FormData();
+            formData.append('nombre', form.nombre);
+            formData.append('cantidad', form.cantidad);
+            formData.append('precio', form.precio);
+            formData.append('descripcion', form.descripcion);
+            formData.append('imagePath', form.imagen);
+
+            await fetchData('POST', formData, {
+                'Content-Type': 'multipart/form-data',
+            });
+
+            console.log('Formulario enviado');
+            window.location.href = '/#/productos/ver';
         } else {
             setErrors(validationErrors);
         }
@@ -94,7 +127,7 @@ const ProductosForm = () => {
                     onChange={handleChange}
                     className="p-2 border border-gray-300 rounded-md"
                 />
-                {errors.precio && <p id='precio' className="text-red-500 text-sm">{errors.precio}</p>}
+                {errors.precio && <p id="precio" className="text-red-500 text-sm">{errors.precio}</p>}
             </div>
             <div className="flex flex-col">
                 <label className="mb-2 font-semibold">Descripción:</label>
@@ -105,23 +138,23 @@ const ProductosForm = () => {
                     onChange={handleChange}
                     className="p-2 border border-gray-300 rounded-md"
                 />
-                {errors.descripcion && <p id='descripcion' className="text-red-500 text-sm">{errors.descripcion}</p>}
+                {errors.descripcion && <p id="descripcion" className="text-red-500 text-sm">{errors.descripcion}</p>}
             </div>
             <div className="flex flex-col">
                 <label className="mb-2 font-semibold">Imagen:</label>
                 <input
                     type="file"
                     name="imagen"
-                    value={form.imagen}
                     onChange={handleChange}
                     className="p-2 border border-gray-300 rounded-md"
                 />
-                {errors.imagen && <p id='imagen' className="text-red-500 text-sm">{errors.imagen}</p>}
+                {errors.imagen && <p id="imagen" className="text-red-500 text-sm">{errors.imagen}</p>}
             </div>
-            <div className='pt-4'>
-                <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-md btn">Enviar</button>
+            <div className="pt-4">
+                <button type="submit" disabled={loading} className="px-4 py-2 bg-blue-500 text-white rounded-md btn">
+                    {loading ? 'Enviando...' : 'Enviar'}
+                </button>
             </div>
-
         </form>
     );
 };
