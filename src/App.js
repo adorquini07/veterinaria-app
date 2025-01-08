@@ -1,25 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { HashRouter as Router, Route, Routes } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Bienvenida from './components/ImgeBienvenida';
+import Clientes from './components/Clientes';
+import Testimonios from './components/Testimonios';
+import Footer from './components/Footer';
+import Productos from './components/Productos';
+import ClienteForm from './components/ClienteForm';
+import ProductosForm from './components/ProductosForm';
+// import Search from './components/Search';
+import './styles/App.css';
 
-function App() {
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload hola.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <Navbar />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <Bienvenida />
+                <Testimonios />
+              </>
+            }
+          />
+          <Route path="/clientes/ver" element={<Clientes />} />
+          <Route path="/productos/ver" element={<Productos />} />
+          <Route path="/clientes/crear" element={<ClienteForm />} />
+          <Route path="/productos/crear" element={<ProductosForm />} />
+          {/* <Route path="/search" element={<Search />} /> */}
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
   );
-}
+};
 
 export default App;
