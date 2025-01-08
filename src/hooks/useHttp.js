@@ -9,20 +9,28 @@ const useHttp = (initialUrl) => {
 
   const fetchData = async (method = 'GET', body = null, headers = {}) => {
     setLoading(true);
-    setError(null); 
+    setError(null);
+
     const controller = new AbortController();
     const signal = controller.signal;
+    const finalUrl = method === 'DELETE' ? url + body.id : url;
 
     try {
+      console.log('URL:', url);
       const response = await axios({
         method,
-        url,
+        url: finalUrl,
         data: body,
         headers,
         signal,
       });
-      setData(response.data);
+      console.log('Response:', response);
+      if (response.status === 200 || response === 'Usuario eliminado' || response === 'Producto eliminado') {
+        setData(response.data);
+        return response.data;
+      }
     } catch (err) {
+      console.log(err);
       if (axios.isCancel(err)) {
         console.log('Request canceled', err.message);
       } else {
@@ -32,17 +40,8 @@ const useHttp = (initialUrl) => {
       setLoading(false);
     }
 
-    return () => {
-    controller.abort();
-    };
+    return () => controller.abort();
   };
-
-  useEffect(() => {
-    return () => {
-    const controller = new AbortController();
-    controller.abort();
-    };
-  }, []);
 
   return { data, error, loading, fetchData, setUrl };
 };

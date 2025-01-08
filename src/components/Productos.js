@@ -1,13 +1,35 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import useHttp from '../hooks/useHttp';
 import '../styles/App.css';
 
 const Productos = () => {
-  const { data: productos, fetchData, loading, error } = useHttp('http://localhost:49775/api/producto/listar');
+  const [productos, setProductos] = useState([]);
+  const { fetchData, loading, error } = useHttp('http://localhost:49775/api/producto/listar');
+  const { fetchData: deleteProducto } = useHttp('http://localhost:49775/api/producto/eliminar/');
 
   useEffect(() => {
-    fetchData();
-  }, []);
+      const fetchClientes = async () => {
+        const response = await fetchData();
+        if (response) {
+          setProductos(response);
+        }
+      };
+      fetchClientes();
+    }, []);
+
+  const handleDelete = async (id) => {
+    console.log('id', id);
+    try {
+      const response = await deleteProducto('DELETE', { id });
+      if (response === 'Producto eliminado') {
+        window.location.reload();
+      } else {
+        console.error('Error al eliminar el cliente:', response);
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+    }
+  };
 
   return (
     <div className="container">
@@ -42,6 +64,12 @@ const Productos = () => {
                 <p className="block font-sans text-sm antialiased font-normal leading-normal text-gray-700 opacity-75">
                   {producto.descripcion || 'Sin descripción'}
                 </p>
+                <button
+                  onClick={() => handleDelete(producto.id)}
+                  className="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                >
+                  Eliminar
+                </button>
               </div>
             </div>
           ))
