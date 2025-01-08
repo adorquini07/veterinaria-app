@@ -18,7 +18,7 @@ const Navbar = () => {
     }
 
     return (
-        <nav className="bg-red shadow-md">
+        <nav className="bg-red shadow-md z-50 relative">
             <div className="container mx-auto px-4 py-2 flex justify-between items-center">
                 <h1 className="text-2xl font-bold text-gray-800">Veterinaria las 3Q</h1>
                 <ul className="flex space-x-4">

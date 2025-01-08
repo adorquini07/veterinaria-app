@@ -12,6 +12,8 @@ const ProductosForm = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        console.log(name, value);
+        document.getElementById(name).style.display = 'none';
         setForm({
             ...form,
             [name]: value
@@ -20,19 +22,30 @@ const ProductosForm = () => {
 
     const validate = () => {
         let errors = {};
-        if (!form.nombre) errors.nombre = 'El nombre es requerido';
+        if (!form.nombre) {
+            document.getElementById('nombre').style.display = 'block';
+            errors.nombre = 'El nombre es requerido'
+        };
         if (!form.cantidad) {
+            document.getElementById('cantidad').style.display = 'block';
             errors.cantidad = 'La cantidad es requerida';
         } else if (isNaN(form.cantidad)) {
             errors.cantidad = 'La cantidad debe ser un número';
         }
         if (!form.precio) {
+            document.getElementById('precio').style.display = 'block';
             errors.precio = 'El precio es requerido';
         } else if (isNaN(form.precio)) {
             errors.precio = 'El precio debe ser un número';
         }
-        if (!form.descripcion) errors.descripcion = 'La descripción es requerida';
-        if (!form.imagen) errors.imagen = 'La imagen es requerida';
+        if (!form.descripcion) {
+            document.getElementById('descripcion').style.display = 'block';
+            errors.descripcion = 'La descripción es requerida'
+        };
+        if (!form.imagen) {
+            document.getElementById('imagen').style.display = 'block';
+            errors.imagen = 'La imagen es requerida'
+        };
         return errors;
     };
 
@@ -59,7 +72,7 @@ const ProductosForm = () => {
                     onChange={handleChange}
                     className="p-2 border border-gray-300 rounded-md"
                 />
-                {errors.nombre && <p className="text-red-500 text-sm">{errors.nombre}</p>}
+                {errors.nombre && <p id="nombre" className="text-red-500 text-sm">{errors.nombre}</p>}
             </div>
             <div className="flex flex-col">
                 <label className="mb-2 font-semibold">Cantidad:</label>
@@ -70,7 +83,7 @@ const ProductosForm = () => {
                     onChange={handleChange}
                     className="p-2 border border-gray-300 rounded-md"
                 />
-                {errors.cantidad && <p className="text-red-500 text-sm">{errors.cantidad}</p>}
+                {errors.cantidad && <p id="cantidad" className="text-red-500 text-sm">{errors.cantidad}</p>}
             </div>
             <div className="flex flex-col">
                 <label className="mb-2 font-semibold">Precio:</label>
@@ -81,7 +94,7 @@ const ProductosForm = () => {
                     onChange={handleChange}
                     className="p-2 border border-gray-300 rounded-md"
                 />
-                {errors.precio && <p className="text-red-500 text-sm">{errors.precio}</p>}
+                {errors.precio && <p id='precio' className="text-red-500 text-sm">{errors.precio}</p>}
             </div>
             <div className="flex flex-col">
                 <label className="mb-2 font-semibold">Descripción:</label>
@@ -92,7 +105,7 @@ const ProductosForm = () => {
                     onChange={handleChange}
                     className="p-2 border border-gray-300 rounded-md"
                 />
-                {errors.descripcion && <p className="text-red-500 text-sm">{errors.descripcion}</p>}
+                {errors.descripcion && <p id='descripcion' className="text-red-500 text-sm">{errors.descripcion}</p>}
             </div>
             <div className="flex flex-col">
                 <label className="mb-2 font-semibold">Imagen:</label>
@@ -103,7 +116,7 @@ const ProductosForm = () => {
                     onChange={handleChange}
                     className="p-2 border border-gray-300 rounded-md"
                 />
-                {errors.imagen && <p className="text-red-500 text-sm">{errors.imagen}</p>}
+                {errors.imagen && <p id='imagen' className="text-red-500 text-sm">{errors.imagen}</p>}
             </div>
             <div className='pt-4'>
                 <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-md btn">Enviar</button>

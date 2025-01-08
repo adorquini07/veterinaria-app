@@ -43,6 +43,7 @@ const ClienteForm = () => {
                     value={formData.nombre}
                     onChange={handleChange}
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    required
                 />
             </div>
             <div className="mb-4">
@@ -56,6 +57,7 @@ const ClienteForm = () => {
                     value={formData.apellido}
                     onChange={handleChange}
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    required
                 />
             </div>
             <div className="mb-4">
@@ -69,6 +71,7 @@ const ClienteForm = () => {
                     value={formData.email}
                     onChange={handleChange}
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    required
                 />
             </div>
             <div className="mb-4">
@@ -82,6 +85,7 @@ const ClienteForm = () => {
                     value={formData.contrasena}
                     onChange={handleChange}
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    required
                 />
             </div>
             <div className="mb-4">
@@ -95,6 +99,7 @@ const ClienteForm = () => {
                     value={formData.repetirContrasena}
                     onChange={handleChange}
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    required
                 />
             </div>
             {error && <p className="text-red-500 text-xs italic">{error}</p>}
