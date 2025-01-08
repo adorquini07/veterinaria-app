@@ -13,10 +13,20 @@ const useHttp = (initialUrl) => {
 
     const controller = new AbortController();
     const signal = controller.signal;
-    const finalUrl = method === 'DELETE' ? url + body.id : url;
+    let finalUrl = method === 'DELETE' ? url + body.id : url;
+
+    if (body) {
+      if (method === 'DELETE') {
+        finalUrl = url + body.id;
+      } else if (method === 'GET') {
+        finalUrl = url + body.nombre;
+      }
+    } else {
+      finalUrl = url;
+    }
 
     try {
-      console.log('URL:', url);
+      console.log('URL:', finalUrl);
       const response = await axios({
         method,
         url: finalUrl,
